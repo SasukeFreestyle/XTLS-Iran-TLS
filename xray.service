@@ -1,0 +1,19 @@
+[Unit]
+Description=XTLS Xray-Core a VMESS/VLESS Server
+After=network.target nss-lookup.target
+
+[Service]
+User=USERNAME
+Group=USERNAME
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+#               Edit to your username in both places 
+ExecStart=/home/USERNAME/xray/xray run -config /home/USERNAME/xray/config.json
+Restart=on-failure
+RestartPreventExitStatus=23
+StandardOutput=journal
+LimitNPROC=100000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
