@@ -167,7 +167,7 @@ Now we are going to get SSL/TLS certificates from Certbot for secure communicati
 ```
 sudo certbot certonly
 ```
-Now we will make Certbot use a standalone webserver to certificate authorization.
+Now we will make Certbot use a standalone webserver for certificate authorization.
 For this you need port 80 open.
 
 For me it was option 1, it may be a different number for you.
@@ -179,7 +179,7 @@ the /.well-known/acme-challenge/ request path. Suitable if there is no HTTP
 server already running. HTTP challenge only (wildcards not supported).
 (standalone) <-----
 ```
-- Enter your e-mail and press enter 
+- Then Enter your e-mail and press enter 
 
 - Accept the Terms and Service by pressing Y and then enter
 
