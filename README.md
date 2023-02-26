@@ -39,14 +39,14 @@ sudo nano /etc/security/limits.conf
 
 Copy this at end of the file and save and close.
 ```console
-* soft     nproc          65535
-* hard     nproc          65535
-* soft     nofile         65535
-* hard     nofile         65535
-root soft     nproc          65535
-root hard     nproc          65535
-root soft     nofile         65535
-root hard     nofile         65535
+* soft     nproc          655350
+* hard     nproc          655350
+* soft     nofile         655350
+* hard     nofile         655350
+root soft     nproc          655350
+root hard     nproc          655350
+root soft     nofile         655350
+root hard     nofile         655350
 ```
 
 Run this to apply settings.
