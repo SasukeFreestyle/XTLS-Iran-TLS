@@ -12,6 +12,9 @@ This guide is written for Ubuntu 22.04 LTS but any Debian based distro should al
 - Domain name must be pointed to your IP hosting the server.
 - Port 80 and 443 open in your router or/and firewall.
 
+### Notes
+This is a noob-friendly guide but if you are an experienced linux user you should make a new user without sudo-access to run xray and give right permissions to files.
+
 
 ****
 ## First we need to do some kernel settings for performance and raise ulimits.
@@ -19,7 +22,7 @@ This guide is written for Ubuntu 22.04 LTS but any Debian based distro should al
 ```
 sudo nano /etc/sysctl.conf
 ```
-Copy this at end of then file and save and close
+Copy this at end of then file and save and close.
 ```console
 net.ipv4.tcp_keepalive_time = 90
 net.ipv4.ip_local_port_range = 1024 65535
@@ -34,7 +37,7 @@ Then run this command to edit limits.conf
 sudo nano /etc/security/limits.conf
 ```
 
-Copy this at end of the file and save and close
+Copy this at end of the file and save and close.
 ```console
 * soft     nproc          65535
 * hard     nproc          65535
@@ -46,13 +49,13 @@ root soft     nofile         65535
 root hard     nofile         65535
 ```
 
-Run this to apply settings
+Run this to apply settings.
 ```
 sudo sysctl -p
 ```
 ## Install Xray (XTLS)
 
-Create two folders in your username home folder. You should be in this folder when you log in
+Create two folders in your username home folder. You should be in this folder when you log in.
 
 ```
 mkdir xray
@@ -61,14 +64,14 @@ mkdir xray
 mkdir cert 
 ```
 
-Update Ubuntu package list and install unzip
+Update Ubuntu package list and install unzip.
 ``` 
 sudo apt-get update
 ```
 ```
 sudo apt-get install unzip
 ```
- Change directory to the newly created xray folder
+ Change directory to the newly created xray folder.
 
 ```
 cd xray/
@@ -91,12 +94,15 @@ wget https://github.com/XTLS/Xray-core/releases/download/v1.7.5/Xray-linux-64.zi
 ```
 unzip Xray-linux-64.zip
 ```
-
+Remove the Xray-linux-64.zip for easier future updates. See [updates](https://github.com/SasukeFreestyle/XTLS-Iran-TLS#how-to-update-to-latest-version)
+```
+rm Xray-linux-64.zip
+```
 Generate UUID for config.json save this for later.
 ```
 ./xray uuid -i Secret
 ```
-It should look something like this
+It should look something like this.
 ```console
 92c96807-e627-5328-8d85-XXXXXXXXX
 ```
@@ -129,7 +135,7 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 ```
 Remember to edit this file to your own ***USERNAME!***
-The parts to edit are
+The parts to edit are.
 ```console
 User=USERNAME
 Group=USERNAME
@@ -144,7 +150,7 @@ ExecStart=/home/USERNAME/xray/xray run -config /home/SasukeFreestyle/xray/config
 ```
 
 
-Reload services and enable auto-start
+Reload services and enable auto-start.
 ```
 sudo systemctl daemon-reload && sudo systemctl enable xray
 ```
@@ -163,29 +169,17 @@ sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ```
 
-Now we are going to get SSL/TLS certificates from Certbot for secure communication to the server
-```
-sudo certbot certonly
-```
-Now we will make Certbot use a standalone webserver for certificate authorization.
+Now we are going to get SSL/TLS certificates from Certbot for secure communication to the server.
+
+We will make Certbot use a standalone webserver for certificate authorization.
+
 For this you need port 80 open.
-
-For me it was option 1, it may be a different number for you.
-
-We want: "Runs an HTTP server locally" <ins>So pick the right number</ins> for this option and then press enter.
-```console
-X: Runs an HTTP server locally which serves the necessary validation files under
-the /.well-known/acme-challenge/ request path. Suitable if there is no HTTP
-server already running. HTTP challenge only (wildcards not supported).
-(standalone) <-----
 ```
-- Then Enter your e-mail and press enter 
-
-- Accept the Terms and Service by pressing Y and then enter
-
-- Press Y if you want to share your email with Certbot, press N if you don't want to share, then press enter.
+sudo certbot certonly --standalone --preferred-challenge http --agree-tos --register-unsafely-without-email
+```
 
 - At this part enter your domain name (replace EXAMPLE.COM)
+
 ```console
 Please enter the domain name(s) you would like on your certificate (comma and/or
 space separated) (Enter 'c' to cancel): EXAMPLE.COM
@@ -212,7 +206,7 @@ sudo apt-get install nginx
 ```
 
 
-Next we will remove server tokens from Nginx
+Next we will remove server tokens from Nginx.
 ```
 sudo nano /etc/nginx/nginx.conf
 ```
@@ -221,11 +215,11 @@ Add under sendfile on; in http block and save file.
 server_tokens off;
 ```
 
-Remove the Nginx default virtualhost configuration
+Remove the Nginx default virtualhost configuration.
 ```
 sudo rm /etc/nginx/conf.d/default.conf
 ```
-Create a new default.conf and copy contents from [default.conf](https://github.com/SasukeFreestyle/XTLS-Iran-TLS/blob/main/default.conf) from this repository
+Create a new default.conf and copy contents from [default.conf](https://github.com/SasukeFreestyle/XTLS-Iran-TLS/blob/main/default.conf) from this repository.
 ```
 sudo nano /etc/nginx/conf.d/default.conf
 ```
@@ -236,7 +230,7 @@ server_name EXAMPLE.COM;
 ```
 Do NOT edit server_name _; in the last server block (at the end of file)
 
-Test Nginx configuration 
+Test Nginx configuration. 
 ```
 sudo nginx -t
 ```
@@ -246,7 +240,7 @@ nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
 nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
-Reload services and enable Nginx auto-start and restart Nginx
+Reload services and enable Nginx auto-start and restart Nginx.
 
 ```
 sudo systemctl daemon-reload
@@ -261,16 +255,19 @@ sudo systemctl restart nginx
 
 ## Xray Configuration
 
-Create a new file called config.json inside xray folder
-Copy contents of [config.json](https://github.com/SasukeFreestyle/XTLS-Iran-TLS/blob/main/config.json) from this repository inside the file
+Create a new file called config.json inside xray folder.
+Copy contents of [config.json](https://github.com/SasukeFreestyle/XTLS-Iran-TLS/blob/main/config.json) from this repository to the file.
 ```
 nano /home/USERNAME/xray/config.json
 ```
 
-Enter your UUID inside "YOUR UUID HERE" Example: "id":"92c96807-e627-5328-8d85-XXXXXXXXX",
-Change your path to your USERNAME
+- Enter your UUID inside "YOUR UUID HERE" Example: "id":"92c96807-e627-5328-8d85-XXXXXXXXX",
+- Change your path to your USERNAME
+- If all your clients/apps support xtls-rprx-vision you should remove ,none from "flow" If you want backwards-compability to VLESS keep it as it is.
 
-The parts to edit are
+
+
+The parts to edit are.
 ```json
    "inbounds":[
       {
@@ -281,7 +278,7 @@ The parts to edit are
             "clients":[
                {
                   "id":"YOUR UUID HERE", // Edit to your own UUID
-                  "flow":"xtls-rprx-vision,none"
+                  "flow":"xtls-rprx-vision,none" // Remove ,none if all your apps/clients support vision. If you want backwards-compability to VLESS keep it as it is.
                }
             ],
             "decryption":"none",
@@ -319,20 +316,33 @@ Example
 "keyFile":"/home/SasukeFreestyle/cert/privkey.pem"
 ```
 
+- If all your clients/apps support xtls-rprx-vision you should remove ,none from "flow"
+- You should use vision only for better speeds and to better hide xray from government firewall. 
+
+
+Example
+```json
+"flow":"xtls-rprx-vision"
+```
+- Or If you want backwards-compability to VLESS keep it as it is.
+```json
+"flow":"xtls-rprx-vision,none"
+```
+
 ## Configure Certbot renewal script for certificate updates
    
 Create a stop [script](https://github.com/SasukeFreestyle/XTLS-Iran-TLS/blob/main/stop.sh), this script stops xray when certificates updates.
 ```
 sudo nano /etc/letsencrypt/renewal-hooks/pre/stop.sh
 ```  
-Copy paste this text to file then save
+Copy paste this text to file then save.
 
 ```console
 #!/bin/sh
 systemctl stop xray
 ``` 
 
-Make script executable
+Make script executable.
 ```   
 sudo chmod +x /etc/letsencrypt/renewal-hooks/pre/stop.sh
 ```  
@@ -342,7 +352,7 @@ Create a start [script](https://github.com/SasukeFreestyle/XTLS-Iran-TLS/blob/ma
 sudo nano /etc/letsencrypt/renewal-hooks/post/start.sh
 ```  
 Edit EXAMPLE.COM and USERNAME to your domain and username.
-Copy paste this text to file then save
+Copy paste this text to file then save.
 ```console
 #!/bin/sh
 cp /etc/letsencrypt/live/EXAMPLE.COM/fullchain.pem /home/USERNAME/cert/fullchain.pem
@@ -352,7 +362,7 @@ chown USERNAME:USERNAME /home/USERNAME/cert/privkey.pem
 systemctl start xray
 ```  
 
-Make script executable
+Make script executable.
 ```  
 sudo chmod +x /etc/letsencrypt/renewal-hooks/post/start.sh
 ```  
@@ -363,7 +373,7 @@ Run a Certbot dry-run, This will copy certificates to your cert folder in your h
 sudo certbot renew --dry-run
 ```  
 
-Check if xray is running it should now say Active: active (running)
+Check if xray is running it should now say Active: active (running).
 
 ```  
 sudo systemctl status xray
@@ -386,7 +396,9 @@ To connect to the server using V2rayNG or any other client these are the setting
 
 In V2rayNG press + then pick "Type manually[VLESS]"
 
-- Remarks
+Settings also apply to V2rayN (Windows).
+
+- Remarks/Alias
   -  Name of the server, choose whatever name you want.
 - Address
   - Domain name of your server. (EXAMPLE.COM)
@@ -394,7 +406,7 @@ In V2rayNG press + then pick "Type manually[VLESS]"
 - id:
   - Your UUID in config.json
 - Flow: xtls-rprx-vision
-  - If your software does not have vision, leave flow empty.
+  - If your software does not have vision, leave flow empty. ,none in flow required.
 - Encryption: None
 - Network: TCP
 - TLS: TLS
@@ -402,10 +414,43 @@ In V2rayNG press + then pick "Type manually[VLESS]"
 - alpn: http/1.1
 - allowinsecure: False
 
+![photo_2023-02-26_04-49-03](https://user-images.githubusercontent.com/2391403/221391586-acebea4e-6467-4908-972c-ef882142b113.jpg)
+
+- Settings for V2rayN.
+
+![Capt1ure](https://user-images.githubusercontent.com/2391403/221391385-0a5e50af-77cd-40db-9b8f-a4092551b784.PNG)
 
 ## Optional (But recommended)
 You should make a fake website with random contents and put your HTML files inside /usr/share/nginx/html/
 This will make it harder to detect the server and will mask the server better.
+
+## How to update to latest version
+If a new version of Xray is published and you want to update to the latest version do this easy steps.
+
+- Log into your machine with SSH.
+
+Change directory to your xray folder.
+```
+cd xray/
+```
+wget the latest release, we will use this example link since latest version is still 1.7.5
+```
+wget https://github.com/XTLS/Xray-core/releases/download/v1.7.5/Xray-linux-64.zip
+```
+
+This command will stop the xray service and remove old files and start xray service again.
+```
+sudo systemctl stop xray && rm geo* && rm LICENSE && rm README.md && rm xray && unzip Xray-linux-64.zip && sudo systemctl start xray
+```
+Make sure xray is running by entering this command.
+```
+sudo systemctl status xray
+```
+Remove the zipfile.
+```
+rm Xray-linux-64.zip
+```
+Done!
 
 
 ## Roadmap
