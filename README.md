@@ -402,7 +402,7 @@ Finished. You now have a XTLS (V2ray) server with real certificates that are val
 
 Visit https://EXAMPLE.COM (Your domain) and see if you can see "Welcome to nginx" website.
 
-### Client/Apps (Settings)
+## Client/Apps (Settings)
 
 To connect to the server using V2rayNG or any other client these are the settings.
 
