@@ -1,6 +1,22 @@
 # XTLS-Iran-TLS
 ### How to make a V2ray (XTLS) Server for bypassing internet censorship in Iran with TLS encryption and Fallback (Anti-probe) to Nginx webserver.
 
+- The main goal of this guide is to spread awereness on how to make one correctly.
+- I see many guides/videos online and v2ray servers in public Telegram groups that are missconfigured for Iranian users. Some are not even encrypted...
+- The configuration file [(config.json)](https://github.com/SasukeFreestyle/XTLS-Iran-TLS/blob/main/config.json) is the main key here that includes a correct CIDR-IP block so the server does not initiate a connection back to Iran as this is not "normal" behaviour for a (web)server.
+- The use of encryption, in this case TLS and a fallback to Nginx to prevent active-probing.
+- The use of uTLS fingerprint is also important. This is configured in the clients/apps.
+
+This will work with or without CDN. But this guide is without CDN.
+****
+
+### Notes
+- This is a noob-friendly guide but if you are an experienced linux user you should make a new user without sudo-access to run xray and give right permissions to files.
+- I wanted to make it easy for anyone non-technical to make a server without changing/creating users or editing permissions of files.
+- I will also teach on how to use your Iranian IP for direct communication to Iranian websites/services without disconnecting the "VPN".
+
+****
+
 This guide is written for Ubuntu 22.04 LTS but any Debian based distro should also work.
 
 ### What you need before starting this guide. Prerequisites
@@ -11,9 +27,6 @@ This guide is written for Ubuntu 22.04 LTS but any Debian based distro should al
 - A Domain name, You can get a free domain name from https://freedns.afraid.org/ or https://www.noip.com/
 - Domain name must be pointed to your IP hosting the server.
 - Port 80 and 443 open in your router or/and firewall.
-
-### Notes
-This is a noob-friendly guide but if you are an experienced linux user you should make a new user without sudo-access to run xray and give right permissions to files.
 
 
 ****
@@ -263,9 +276,18 @@ nano /home/USERNAME/xray/config.json
 
 - Enter your UUID inside "YOUR UUID HERE" Example: "id":"92c96807-e627-5328-8d85-XXXXXXXXX",
 - Change your path to your USERNAME
-- If all your clients/apps support xtls-rprx-vision you should remove ,none from "flow" If you want backwards-compability to VLESS keep it as it is.
+- My recommendation is to use Vision without ,none. Most popular clients today support vision. 
+- If your clients/apps does not support xtls-rprx-vision add ,none in flow.
+- If your client/app does support vision, do not add ,none to flow.
 
-
+Example
+```json
+"flow":"xtls-rprx-vision,none"
+```
+Or (recommended)
+```json
+"flow":"xtls-rprx-vision"
+```
 
 The parts to edit are.
 ```json
@@ -278,7 +300,8 @@ The parts to edit are.
             "clients":[
                {
                   "id":"YOUR UUID HERE", // Edit to your own UUID
-                  "flow":"xtls-rprx-vision,none" // Remove ,none if all your apps/clients support vision. If you want backwards-compability to VLESS keep it as it is.
+                  "flow":"xtls-rprx-vision" // add ,none if your apps/clients does not support vision.
+               // "flow":"xtls-rprx-vision,none"
                }
             ],
             "decryption":"none",
@@ -314,19 +337,6 @@ Example
 "id":"92c96807-e627-5328-8d85-XXXXXXXXX",
 "certificateFile":"/home/SasukeFreestyle/cert/fullchain.pem",
 "keyFile":"/home/SasukeFreestyle/cert/privkey.pem"
-```
-
-- If all your clients/apps support xtls-rprx-vision you should remove ,none from "flow"
-- You should use vision only for better speeds and to better hide xray from government firewall. 
-
-
-Example
-```json
-"flow":"xtls-rprx-vision"
-```
-- Or If you want backwards-compability to VLESS keep it as it is.
-```json
-"flow":"xtls-rprx-vision,none"
 ```
 
 ## Configure Certbot renewal script for certificate updates
@@ -398,6 +408,8 @@ In V2rayNG press + then pick "Type manually[VLESS]"
 
 Settings also apply to V2rayN (Windows).
 
+Remember to set (uTLS) Fingerprint to Chrome.
+
 - Remarks/Alias
   -  Name of the server, choose whatever name you want.
 - Address
@@ -415,6 +427,30 @@ Settings also apply to V2rayN (Windows).
 - allowinsecure: False
 
 ![photo_2023-02-26_04-49-03](https://user-images.githubusercontent.com/2391403/221391586-acebea4e-6467-4908-972c-ef882142b113.jpg)
+
+
+
+If you want to be able to visit Iranians websites without disconnecting the VPN follow the instructions in the video below.
+
+This will also make it harder for government to see that you are using a VPN.
+
+Go to Settings -> Custom Rules -> Direct URL or IP.
+
+Enter
+```
+geoip:private,
+geosite:private,
+geoip:ir,
+geosite:category-ir
+```
+Then save.
+
+Video Instructions:
+
+https://user-images.githubusercontent.com/2391403/222937653-fac82776-5580-4b7f-92cc-347e3cff5cf5.mp4
+
+
+***
 
 - Settings for V2rayN.
 
@@ -451,6 +487,7 @@ Remove the zipfile.
 rm Xray-linux-64.zip
 ```
 Done!
+
 
 
 ## Roadmap
