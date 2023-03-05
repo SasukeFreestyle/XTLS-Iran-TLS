@@ -11,7 +11,7 @@
             "clients":[
                {
                   "id":"YOUR UUID HERE",
-                  "flow":"xtls-rprx-vision,none"
+                  "flow":"xtls-rprx-vision"
                }
             ],
             "decryption":"none",
