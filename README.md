@@ -159,7 +159,7 @@ Example
 ```console
 User=SasukeFreestyle
 Group=SasukeFreestyle
-ExecStart=/home/USERNAME/xray/xray run -config /home/SasukeFreestyle/xray/config.json
+ExecStart=/home/SasukeFreestyle/xray/xray run -config /home/SasukeFreestyle/xray/config.json
 ```
 
 
