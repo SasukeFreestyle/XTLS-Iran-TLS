@@ -1,13 +1,15 @@
 # XTLS-Iran-TLS
 ### How to make a V2ray (XTLS) Server for bypassing internet censorship in Iran with TLS encryption and Fallback (Anti-probe) to Nginx webserver.
 
+If you want to try the new reality protocol see this [repository](https://github.com/SasukeFreestyle/XTLS-Iran-Reality)
+
 - The main goal of this guide is to spread awereness on how to make one correctly.
 - I see many guides/videos online and v2ray servers in public Telegram groups that are missconfigured for Iranian users. Some are not even encrypted...
 - The configuration file [(config.json)](https://github.com/SasukeFreestyle/XTLS-Iran-TLS/blob/main/config.json) is the main key here that includes a correct CIDR-IP block so the server does not initiate a connection back to Iran as this is not "normal" behaviour for a (web)server.
 - The use of encryption, in this case TLS and a fallback to Nginx to prevent active-probing.
 - The use of uTLS fingerprint is also important. This is configured in the clients/apps.
 
-This will work with or without CDN. But this guide is without CDN.
+This will not work CDNs like cloudflare e.t.c
 ****
 
 ### Notes
