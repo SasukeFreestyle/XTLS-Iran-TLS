@@ -95,6 +95,10 @@ sudo apt-get install unzip
 ```
 cd xray/
 ```
+Download the latest geoasset file for blocking Iranian websites.
+```
+wget https://github.com/bootmortis/iran-hosted-domains/releases/latest/download/iran.dat
+```
 
 Download the latest version of XTLS-Xray-Core.
 
