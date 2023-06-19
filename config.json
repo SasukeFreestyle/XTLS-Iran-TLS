@@ -72,6 +72,7 @@
          },
          {
             "type":"field",
+            "outboundTag":"block",
             "ip":[
                "geoip:ir",
                "geoip:private",
@@ -1983,15 +1984,36 @@
                "172.16.0.0/12",
                "127.0.0.0/8",
                "100.64.0.0/10"
-            ],
-            "outboundTag":"block"
+            ]
          },
          {
             "type":"field",
             "outboundTag":"block",
             "domain":[
-               "geosite:category-ir",
                "geosite:private",
+               "geosite:category-ir",
+               "ext:iran.dat:ir",
+               "ext:iran.dat:other",
+               "regexp:.*\\.ir$",
+               "snapp",
+               "digikala",
+               "tapsi",
+               "blogfa",
+               "bank",
+               "sb24.com",
+               "sheypoor.com",
+               "tebyan.net",
+               "beytoote.com",
+               "telewebion.com",
+               "Film2movie.ws",
+               "Setare.com",
+               "Filimo.com",
+               "Torob.com",
+               "Tgju.org",
+               "Sarzamindownload.com",
+               "downloadha.com",
+               "P30download.com",
+               "Sanjesh.org",
                "domain:intrack.ir",
                "domain:divar.ir",
                "domain:irancell.ir",
